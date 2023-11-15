@@ -21,4 +21,9 @@ oc apply \
   -f ./manifests/rhsi-hackfest-jaeger-all-in-one-memory_cr.yaml \
   -n $OBSERVABILITY_NS
 
-watch oc get po
+# Create a route for the all-in-one-memroy Jaeger collector
+oc apply \
+  -f ./manifests/rhsi-hackfest-jaeger-all-in-one-collecter_route.yaml \
+  -n $OBSERVABILITY_NS
+
+watch oc get po -n $OBSERVABILITY_NS

@@ -368,14 +368,14 @@ The following environment variables are used in the scope of these instructions.
 
     - `addnewbook-v2` method:
         ```script shell
-        3scale method create ${THREESCALE_TOOLBOX_DESTINATION} library-books-api addnewbook-v2 \
+        3scale method create ${THREESCALE_TOOLBOX_DESTINATION} library-books-api addNewBook-v2 \
         --system-name=addnewbook_v2 \
         --description="Adds a new \`book-v2\` entity in the inventory."
         ```
 
     - `getbooks-v2` method:
         ```script shell
-        3scale method create ${THREESCALE_TOOLBOX_DESTINATION} library-books-api getbooks-v2 \
+        3scale method create ${THREESCALE_TOOLBOX_DESTINATION} library-books-api getBooks-v2 \
         --system-name=getbooks_v2 \
         --description="Gets a list of all \`book-v2\` entities."
         ```
