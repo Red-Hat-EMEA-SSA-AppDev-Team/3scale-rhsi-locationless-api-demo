@@ -217,7 +217,6 @@ The following environment variables are used in the scope of these instructions.
     ```script shell
     3scale application create \
     --description="Developer's Application to the Library Books API (V1 testing purposes)" \
-    --redirect-url="https://oauth.pstmn.io/v1/callback" \
     ${THREESCALE_TOOLBOX_DESTINATION} john library-books-api basic-plan-v1 "Developer's App (v1)"
     ```
 
@@ -454,7 +453,6 @@ The following environment variables are used in the scope of these instructions.
     ```script shell
     3scale application create \
     --description="Developer's Application to the Library Books API (V2 testing purposes)" \
-    --redirect-url="https://oauth.pstmn.io/v1/callback" \
     ${THREESCALE_TOOLBOX_DESTINATION} john library-books-api basic-plan-v2 "Developer's App (v2)"
     ```
 
