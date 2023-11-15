@@ -363,13 +363,6 @@
                         "scopes": {
                             "openid": ""
                         }
-                    },
-                    "authorizationCode": {
-                        "authorizationUrl": "https://sso.apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/auth/realms/rhsi-hackfest/protocol/openid-connect/auth",
-                        "tokenUrl": "https://sso.apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/auth/realms/rhsi-hackfest/protocol/openid-connect/token",
-                        "scopes": {
-                            "openid": ""
-                        }
                     }
                 },
                 "type": "oauth2",

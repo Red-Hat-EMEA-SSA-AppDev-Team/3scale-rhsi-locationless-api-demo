@@ -63,16 +63,3 @@
   version: builtin
   configuration: {}
   enabled: true
-- name: keycloak_role_check
-  version: builtin
-  configuration:
-    type: whitelist
-    scopes:
-    - methods:
-      - ANY
-      resource_type: plain
-      resource: "/"
-      realm_roles:
-      - name_type: plain
-        name: library-user
-  enabled: true

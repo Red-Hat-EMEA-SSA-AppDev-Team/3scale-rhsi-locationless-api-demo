@@ -123,9 +123,7 @@ components:
     securitySchemes:
         oidc:
             flows:
-                authorizationCode:
-                    authorizationUrl: >-
-                        https://sso.apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/auth/realms/rhsi-hackfest/protocol/openid-connect/auth
+                clientCredentials:
                     tokenUrl: >-
                         https://sso.apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/auth/realms/rhsi-hackfest/protocol/openid-connect/token
                     scopes:
