@@ -79,7 +79,7 @@ The following environment variables are used in the scope of these instructions.
     > **NOTE**: The `library-books-api` 3scale resources are also mounted into the container at run-time
 
     ```script shell
-    alias 3scale="podman run --rm -v ${ABSOLUTE_BASE_PATH}/ThreescaleAPIProducts/library-books-api:/tmp/toolbox/library-books-api:Z 3scale-toolbox-demo 3scale -k"
+    alias 3scale="podman run --rm -v ${ABSOLUTE_BASE_PATH}/rhsi-hackfest-nov2023/ThreescaleAPIProducts/library-books-api:/tmp/toolbox/library-books-api:Z 3scale-toolbox-demo 3scale -k"
     ```
 
 ### III. Secure the _Library Books API v1_ using Red Hat 3scale API Management with OpenID Connect
