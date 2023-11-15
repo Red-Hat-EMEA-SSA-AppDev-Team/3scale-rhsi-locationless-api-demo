@@ -68,18 +68,18 @@ The following environment variables are used in the scope of these instructions.
     add ${THREESCALE_TOOLBOX_DESTINATION} https://${THREESCALE_TENANT_ACCESS_TOKEN}@${THREESCALE_TENANT_ADMIN_PORTAL_HOSTNAME}
     ```
 
-3. Use `podman commit` to create a new image, `3scale-toolbox-poc`, from the named container. 
+3. Use `podman commit` to create a new image, `3scale-toolbox-demo`, from the named container. 
     > **NOTE**: Because the previous created container holds the remote information, the new image contains it too.
     ```script shell
-    podman commit 3scale-toolbox-original 3scale-toolbox-poc
+    podman commit 3scale-toolbox-original 3scale-toolbox-demo
     ```
 
-4. Create a bash alias to run the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper) using the `3scale-toolbox-poc` container image.
+4. Create a bash alias to run the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper) using the `3scale-toolbox-demo` container image.
 
     > **NOTE**: The `library-books-api` 3scale resources are also mounted into the container at run-time
 
     ```script shell
-    alias 3scale="podman run --rm -v ${ABSOLUTE_BASE_PATH}/ThreescaleAPIProducts/library-books-api:/tmp/toolbox/library-books-api:Z 3scale-toolbox-poc 3scale -k"
+    alias 3scale="podman run --rm -v ${ABSOLUTE_BASE_PATH}/ThreescaleAPIProducts/library-books-api:/tmp/toolbox/library-books-api:Z 3scale-toolbox-demo 3scale -k"
     ```
 
 ### III. Secure the _Library Books API v1_ using Red Hat 3scale API Management with OpenID Connect
