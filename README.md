@@ -95,8 +95,8 @@ TODO
 5. Expose the `books-api-v1` and `books-api-v2` services over the link
 
     ```shell script
-    skupper expose deployment/books-api-v1 --address books-api-v1 --port 80 --target-port 8080 --protocol http
-    skupper expose deployment/books-api-v2 --address books-api-v2 --port 80 --target-port 8080 --protocol http
+    skupper expose deployment/books-api-v1 --address books-api-v1 --port 80 --target-port 8080 --protocol tcp
+    skupper expose deployment/books-api-v2 --address books-api-v2 --port 80 --target-port 8080 --protocol tcp
     ```
 
 6. Create a token in the AWS OCP cluster namespace that will be used to create the link with the AZURE OCP cluster namespace
@@ -130,6 +130,6 @@ TODO
 
 6. Expose the `books-api-v1` and `books-api-v2` services over the link
     ```shell script
-    skupper expose deployment/books-api-v1 --address books-api-v1 --port 80 --target-port 8080 --protocol http
-    skupper expose deployment/books-api-v2 --address books-api-v2 --port 80 --target-port 8080 --protocol http
+    skupper expose deployment/books-api-v1 --address books-api-v1 --port 80 --target-port 8080 --protocol tcp
+    skupper expose deployment/books-api-v2 --address books-api-v2 --port 80 --target-port 8080 --protocol tcp
     ```
