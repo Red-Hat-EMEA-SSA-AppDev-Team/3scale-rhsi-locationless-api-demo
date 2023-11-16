@@ -6,15 +6,15 @@
 
 ![](./images/rhsi-hackfest-locationless-apis.png)
 
-### Instructions 
+## Instructions 
 
-#### Prepare :cloud: AWS Cloud environment
+### Prepare :cloud: AWS Cloud environment
 
-##### Prerequisites
+#### Prerequisites
 
 TODO
 
-##### Deploy the _Library Books API_ backend services
+#### Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
@@ -29,17 +29,17 @@ TODO
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AWS Cloud"
     ```
 
-##### Secure the _Library Books API_ API with Red Hat 3scale API Management
+#### Secure the _Library Books API_ API with Red Hat 3scale API Management
 
 TODO
 
-#### Prepare :cloud: AZURE Cloud environment
+### Prepare :cloud: AZURE Cloud environment
 
-##### Prerequisites
+#### Prerequisites
 
 TODO
 
-##### Deploy the _Library Books API_ backend services
+#### Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
@@ -54,9 +54,9 @@ TODO
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AZURE Cloud"
     ```
 
-#### Configure the RHSI network
+### Configure the RHSI network
 
-##### :cloud: AWS Cloud Red Hat Service Interconnect Router
+#### :cloud: AWS Cloud Red Hat Service Interconnect Router
 
 1. Login to the AWS OCP cluster
     ```shell script
@@ -91,7 +91,7 @@ TODO
     skupper token create secret_aws_azure.token
     ```
 
-##### :cloud: AZURE Cloud Red Hat Service Interconnect Router
+#### :cloud: AZURE Cloud Red Hat Service Interconnect Router
 
 1. login to the AZURE OCP cluster
     ```shell script
