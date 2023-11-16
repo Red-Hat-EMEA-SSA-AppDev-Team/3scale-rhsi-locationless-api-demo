@@ -8,7 +8,7 @@
 
 ### Instructions 
 
-#### I. Prepare :cloud: AWS Cloud environment
+#### Prepare :cloud: AWS Cloud environment
 
 ##### 1. Install Red Hat 3scale API Management
 
@@ -29,7 +29,7 @@ TODO
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AWS Cloud"
     ```
 
-#### II. Prepare :cloud: AZURE Cloud environment
+#### Prepare :cloud: AZURE Cloud environment
 
 ##### Deploy the _Library Books API_ backend services
 
@@ -46,7 +46,7 @@ TODO
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AZURE Cloud"
     ```
 
-#### III. Configure the RHSI network
+#### Configure the RHSI network
 
 ##### :cloud: AWS Cloud Red Hat Service Interconnect Router
 
