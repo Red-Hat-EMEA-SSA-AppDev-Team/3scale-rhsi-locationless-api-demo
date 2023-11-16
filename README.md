@@ -112,7 +112,7 @@ TODO
 4. Use the previously created AWS token file to create a link between the `rhsi-hackfest-apibackend` namespaces on AWS and AZURE OCP clusters
     >NOTE: /!\ Beware, the token is only usable once. Plus, it expires after 15mn if not used.
     ```shell script
-    skupper link create ./secret_aws_azure.token --name azure-to-aws
+    skupper link create ./secret_aws_azure.token --name azure-to-aws --cost 99999
     ```
 
 6. Expose the `books-api-v1` and `books-api-v2` services over the link
