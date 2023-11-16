@@ -10,11 +10,11 @@
 
 #### Prepare :cloud: AWS Cloud environment
 
-##### 1. Prerequisites
+##### Prerequisites
 
 TODO
 
-##### 2. Deploy the _Library Books API_ backend services
+##### Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
@@ -29,17 +29,17 @@ TODO
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AWS Cloud"
     ```
 
-##### 3. Secure the _Library Books API_ API with Red Hat 3scale API Management
+##### Secure the _Library Books API_ API with Red Hat 3scale API Management
 
 TODO
 
 #### Prepare :cloud: AZURE Cloud environment
 
-##### 1. Prerequisites
+##### Prerequisites
 
 TODO
 
-##### 2. Deploy the _Library Books API_ backend services
+##### Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
