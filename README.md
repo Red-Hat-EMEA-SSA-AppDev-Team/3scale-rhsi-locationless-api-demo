@@ -1,20 +1,22 @@
-# RHSI Hackfest Nov 14-16 2023 - Securing and exposing APIs location-lessly using Red Hat 3scale API Management and Red Hat Service Interconnect
+# RHSI Hackfest Nov 14-16 2023 
 
-## Overview
+## Securing and exposing APIs location-lessly using Red Hat 3scale API Management and Red Hat Service Interconnect
+
+### Overview
 
 ![](./images/rhsi-hackfest-locationless-apis.png)
 
-## Instructions 
+### Instructions 
 
-### Prepare environments
+#### Prepare environments
 
-#### :cloud: AWS Cloud
+##### :cloud: AWS Cloud
 
-##### I. Install Red Hat 3scale API Management
+###### I. Install Red Hat 3scale API Management
 
 TODO
 
-##### II. Deploy the _Library Books API_ backend services
+###### II. Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
@@ -29,9 +31,9 @@ TODO
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AWS Cloud"
     ```
 
-#### :cloud: AZURE Cloud
+##### :cloud: AZURE Cloud
 
-##### Deploy the _Library Books API_ backend services
+###### Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
@@ -46,9 +48,9 @@ TODO
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AZURE Cloud"
     ```
 
-### Configure the RHSI network
+#### Configure the RHSI network
 
-#### :cloud: AWS Cloud Red Hat Service Interconnect Router
+##### :cloud: AWS Cloud Red Hat Service Interconnect Router
 
 1. Login to the AWS OCP cluster
     ```shell script
@@ -83,7 +85,7 @@ TODO
     skupper token create secret_aws_azure.token
     ```
 
-#### :cloud: AZURE Cloud Red Hat Service Interconnect Router
+##### :cloud: AZURE Cloud Red Hat Service Interconnect Router
 
 1. login to the AZURE OCP cluster
     ```shell script
