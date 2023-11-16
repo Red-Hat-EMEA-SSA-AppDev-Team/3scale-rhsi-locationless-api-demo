@@ -4,6 +4,19 @@
 
 ### Overview
 
+Red Hat 3scale API Management solution has two main components:
+- The **API Manager** used for API management policy configuration
+- The **API Gateway** that executes the API management policies.
+
+The following diagram shows a multi-cluster/sites deployment configuration that is possible out of the box for Red Hat 3scale API Management/
+
+![](./images/OOTB_3scale_multicluster_deployment.png)
+
+- The 3scale API Manager component can only be active (primary) in one OpenShift cluster
+- The 3scale API Gateways can be deployed anywhere. However, this requires a global load-balancer if multiple instances of the same API are deployed across multiple environments.
+
+Red Hat Service Interconnect can be leveraged in order to easily secure multiple instances of an API that are deployed across multiple environments. For instance:
+
 ![](./images/rhsi-hackfest-locationless-apis.png)
 
 ## Instructions 
