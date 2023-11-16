@@ -8,15 +8,13 @@
 
 ### Instructions 
 
-#### Prepare environments
+#### I. Prepare :cloud: AWS Cloud environment
 
-##### :cloud: AWS Cloud
-
-###### I. Install Red Hat 3scale API Management
+##### 1. Install Red Hat 3scale API Management
 
 TODO
 
-###### II. Deploy the _Library Books API_ backend services
+##### 2. Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
@@ -31,9 +29,9 @@ TODO
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AWS Cloud"
     ```
 
-##### :cloud: AZURE Cloud
+#### II. Prepare :cloud: AZURE Cloud environment
 
-###### Deploy the _Library Books API_ backend services
+##### Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
@@ -48,7 +46,7 @@ TODO
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AZURE Cloud"
     ```
 
-#### Configure the RHSI network
+#### III. Configure the RHSI network
 
 ##### :cloud: AWS Cloud Red Hat Service Interconnect Router
 
