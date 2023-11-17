@@ -19,6 +19,16 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
 ![](./images/rhsi-hackfest-locationless-apis.png)
 
+### Expectations
+
+1. As long as all API instances in the same OCP cluster as the 3scale API Gateway are up and running, all requests must be routed to these local instances to reduce latency.
+
+    ![](./images/rhsi-hackfest-locationless-apis_localaccess.png)
+
+2. All requests that are authorized by the 3scale API Gateway should ONLY be routed to the remote OCP cluster when all local API instances are down. This will showcase the secured API service resiliency and high availability.
+
+    ![](./images/rhsi-hackfest-locationless-apis_resilience.png)
+
 ## Instructions 
 
 ### Prepare :cloud: AWS Cloud environment
