@@ -56,11 +56,23 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
 #### Install Red Hat 3scale API Management v2.13
 
-Please follow these [instructions](./install/3scale-amp/README.md).
+1. Change to the `./install/3scale-amp` directory:
+
+    ```script shell
+    cd ./install/3scale-amp
+    ```
+
+2. Follow these [instructions](./install/3scale-amp/README.md).
 
 #### Install Red Hat OpenShift distributed tracing platform for observability
 
-Please follow these [instructions](./install/Observability/README.md).
+1. Change to the `./install/Observability` directory:
+
+    ```script shell
+    cd ./install/Observability
+    ```
+
+2. Follow these [instructions](./install/Observability/README.md).
 
 #### Secure the _Library Books API_ API with Red Hat 3scale API Management
 
