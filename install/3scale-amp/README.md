@@ -2,16 +2,16 @@
 
 1. Adapt the following files according to your environment:
     
-    1. Edit the 3scale APIManager CR ([`./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml`](./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml)) to replace the OpenShift domain with that of your cluster:
+    1. Edit the 3scale APIManager CR ([`./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml`](./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml)) to replace the OpenShift domain placeholder with that of your cluster:
     
         ```script shell
-        sed 's/apps.*com/apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/g' ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml > temp.yaml && mv temp.yaml ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml
+        sed 's/apps.*com/<Replace with your cluster domain URl>/g' ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml > temp.yml && mv temp.yml ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml
         ```
 
         Example:
 
         ```script shell
-        sed 's/apps.*com/<Replace with your cluster domain URl>/g' ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml > temp.yml && mv temp.yml ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml
+        sed 's/apps.*com/apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/g' ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml > temp.yaml && mv temp.yaml ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml
         ```
 
     2. Edit the ([`./2.13_manifests/threescale-aws-s3-auth-secret`](./2.13_manifests/threescale-aws-s3-auth-secret)) according to your AWS cloud environment. Replace the `AWS_ACCESS_KEY_ID`, `AWS_REGION` and `AWS_SECRET_ACCESS_KEY` properties :
@@ -33,7 +33,9 @@
 
 
 
-2. Run the [`setup_rhsi-hackfest_api-manager.sh`](./setup_rhsi-hackfest_api-manager.sh) script:
+2. Run the [`setup_rhsi-hackfest_api-manager.sh`](./setup_rhsi-hackfest_api-manager.sh) script to install the Red Hat 3scale API Management platform in the `rhsi-hackfest-3scale-amp` namespace:
+
+    > NOTE: the 3scale operator is installed with an _all namespaces_ scope.
 
     ```script shell
     ./setup_rhsi-hackfest_api-manager.sh

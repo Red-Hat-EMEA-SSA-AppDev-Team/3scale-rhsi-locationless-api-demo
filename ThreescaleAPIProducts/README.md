@@ -55,12 +55,13 @@ The 3scale `rhsi-hackfest` Admin Portal is then available at `https://rhsi-hackf
 
 - [Podman v4+](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/building_running_and_managing_containers/index)
     > **NOTE:** [Podman](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/building_running_and_managing_containers/index) must have the credentials to connect to the public Red Hat container registry ([registry.redhat.io](registry.redhat.io)) in order to pull the [3scale Toolbox image](https://catalog.redhat.com/software/containers/3scale-amp2/toolbox-rhel8/60ddc3173a73378722213e7e?container-tabs=gti&gti-tabs=registry-tokens).
-    - The `podman login` command can generate a file with credentials (`${XDG_RUNTIME_DIR}/containers/auth.json`). Example: `podman login registry.redhat.io` and then enter the service account credentials to connect.
     - See https://docs.podman.io/en/latest/markdown/podman-login.1.html
     - See https://access.redhat.com/terms-based-registry/ to create the service account associated with your Red Hat customer account.
-- Access Token with read-write permissions on all scopes of your Red Hat 3scale API Manager tenant.
+- Access Token with read-write permissions on all scopes of the `rhsi-hackfest` 3scale tenant.
 
-    ![3scaleAPIM_access-token-creation.png](./images/3scaleAPIM_access-token-creation.png)
+    > NOTE: Use the `rhsi-hackfest` tenant Admin Portal to create the access token. Menu: _Account Settings -> Personal -> Tokens -> Add access token_
+
+    ![](./images/threescale-access-token-creation.png)
 
 #### :bulb: Notes
 
@@ -93,15 +94,13 @@ The following environment variables are used in the scope of these instructions.
 3. Use `podman commit` to create a new image, `3scale-toolbox-demo`, from the named container. 
     > **NOTE**: Because the previous created container holds the remote information, the new image contains it too.
     ```script shell
-    podman commit 3scale-toolbox-original 3scale-toolbox-demo
+    podman commit 3scale-toolbox-original 3scale-toolbox
     ```
 
 4. Create a bash alias to run the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper) using the `3scale-toolbox-demo` container image.
 
-    > **NOTE**: The `library-books-api` 3scale resources are also mounted into the container at run-time
-
     ```script shell
-    alias 3scale="podman run --rm -v ${ABSOLUTE_BASE_PATH}/3scale-rhsi-locationless-api-demo/ThreescaleAPIProducts/library-books-api:/tmp/toolbox/library-books-api:Z 3scale-toolbox-demo 3scale -k"
+    alias 3scale="podman run --rm 3scale-toolbox 3scale -k"
     ```
 
 ### III. Secure the _Library Books API_ services using Red Hat 3scale API Management
@@ -113,134 +112,100 @@ The following environment variables are used in the scope of these instructions.
     oc login...
     ```
 
-2. Make sure the current OpenShift project is the one where the `Red Hat 3scale operator` is deployed. For instance:
+2. Make sure the current OpenShift project is `rhsi-hackfest-3scale-amp`:
     ```shell script
-    oc project 3scale-amp
+    oc project rhsi-hackfest-3scale-amp
     ```
 
-2. Using the 3scale Admin Portail UI, add the `Library Books API (v2) Backend` object to the `Library Books API (v1)` product object with the following properties. Menu: _Products -> Library Books API (v1) -> Integration -> Backends -> Add backend_
-    - Backend: `Library Books API (v2) Backend`
-    - Path: `/v2`
+3. Using the 3scale operator capabilities, secure the _Library Books API_ services using the `rhsi-hackfest` 3scale tenant:
 
-    ![](./images/3scale_add_books-api-v2-backend_to_product.png)
-
-3. Using the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper), create the API product `v2` methods.
-
-    - `addnewbook-v2` method:
+    1. Create the 3scale API backend objects:
         ```script shell
-        3scale method create ${THREESCALE_TOOLBOX_DESTINATION} library-books-api addNewBook-v2 \
-        --system-name=addnewbook_v2 \
-        --description="Adds a new \`book-v2\` entity in the inventory."
+        oc apply -n rhsi-hackfest-3scale-amp \
+        -f ./library-books-api/threescale/backends/books-api-v1.yaml \
+        -f ./library-books-api/threescale/backends/books-api-v2.yaml
         ```
 
-    - `getbooks-v2` method:
+    2. Create the 3scale API product object with its security configuration and policies:
         ```script shell
-        3scale method create ${THREESCALE_TOOLBOX_DESTINATION} library-books-api getBooks-v2 \
-        --system-name=getbooks_v2 \
-        --description="Gets a list of all \`book-v2\` entities."
+        oc apply -n rhsi-hackfest-3scale-amp \
+        -f ./library-books-api/threescale/products/library-books-api.yaml
         ```
 
-    ![](./images/3scale_product-v2_methods.png)
-
-4. Using the 3scale Admin Portail UI, add the following mapping rules. Menu: _Products -> Library Books API (v1) -> Integration -> Mapping Rules -> Create mapping rule_
-
-    - `GET /v2/books$`
-        - Verb: `GET`
-        - Pattern: `/v2/books$`
-        - Method: `getbooks-v2`
-
-        ![](./images/3scale_getbooks-v2_mappingrule.png)
-
-    - `POST /v2/books$`
-        - Verb: `POST`
-        - Pattern: `/v2/books$`
-        - Method: `addnewbook-v2`
-
-        ![](./images/3scale_addnewbook-v2_mappingrule.png)
-
-5. Using the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper), update the `v1` application plans to disable `v2` operations.
-
-    - Update `Basic v1` plan 
+    3. Create the 3scale activedoc object for the _Library Books API_ API product:
         ```script shell
-        3scale application-plan import \
-        --file=/tmp/toolbox/library-books-api/threescale/application_plans/basic-v1-plan_afterv2.yaml \
-        ${THREESCALE_TOOLBOX_DESTINATION} library-books-api
+        oc apply -n rhsi-hackfest-3scale-amp \
+        -f ./library-books-api/threescale/activedocs/library-books-api.yaml
         ```
 
-    - Update `Premium v1` plan
+    4. Promote the configuration to 3scale staging environment:
         ```script shell
-        3scale application-plan import \
-        --file=/tmp/toolbox/library-books-api/threescale/application_plans/premium-v1-plan_afterv2.yaml \
-        ${THREESCALE_TOOLBOX_DESTINATION} library-books-api
+        oc apply -n rhsi-hackfest-3scale-amp \
+        -f ./library-books-api/threescale/proxyconfigs/library-books-api_promotetostaging.yaml
         ```
 
-    You can drill down into the details of each application plan to verify the configurations that has been applied. For instance, the details of the `Basic v1` are shown below.
+    You can explore the _Library Books API_ API product configuration through the `rhsi-hackfest` tenant Admin Portal.
 
-    ![](./images/3scale_product_basicplan_v1afterv2.png)
+    ![](./images/threescale-library-books-api.png)
 
-6. Using the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper), import the `v2` application plans.
+4. Using the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper), create applications to test the configuration:
 
-    - `Basic v2` plan 
+    - A application with the default Developer account subscribing to the service `Premium v1` plan in order to test the `v1` configuration.
         ```script shell
-        3scale application-plan import \
-        --file=/tmp/toolbox/library-books-api/threescale/application_plans/basic-v2-plan.yaml \
-        ${THREESCALE_TOOLBOX_DESTINATION} library-books-api
+        3scale application create \
+        --description="Developer's Application to the Library Books API (V1 testing purposes)" \
+        --application-id=rhsi-hackfest-test-v1 \
+        --application-key=6cb351590d24531e9ddadbd03527f66b \
+        ${THREESCALE_TOOLBOX_DESTINATION} john library-books-api premium-plan-v1 "Developer's App (v1)"
+        ```
+    
+    - A application with the default Developer account subscribing to the service `Premium v2` plan in order to test the `v2` configuration.
+        ```script shell
+        3scale application create \
+        --description="Developer's Application to the Library Books API (V2 testing purposes)" \
+        --application-id=rhsi-hackfest-test-v2 \
+        --application-key=5fe5567a17d58bcf25f935cf517433f0 \
+        ${THREESCALE_TOOLBOX_DESTINATION} john library-books-api premium-plan-v2 "Developer's App (v2)"
         ```
 
-    - `Premium v2` plan
-        ```script shell
-        3scale application-plan import \
-        --file=/tmp/toolbox/library-books-api/threescale/application_plans/premium-v2-plan.yaml \
-        ${THREESCALE_TOOLBOX_DESTINATION} library-books-api
-        ```
+5. Perform some testing of your configuration in the 3scale staging environment.
 
-    After importing, you should find the `Basic v2` and `Premium v2` plans on the _Library Books API (v1)_ product page of the 3scale Admin Portal.
+    1. Test the `/v1/books` path with the `v1` application credentials
 
-    ![](./images/3scale_product_applicationplans_v2.png)
-
-    You can drill down into the details of each application plan to verify the configurations that has been applied. For instance, the details of the `Basic v2` are shown below.
-
-    ![](./images/3scale_product_basicplan_v2.png)
-
-7. Using the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper), promote the APIcast configuration to the Staging Environment.
-    ```script shell
-    3scale proxy deploy ${THREESCALE_TOOLBOX_DESTINATION} library-books-api
-    ```
-
-    ![](./images/3scale_promote-staging_v2.png)
-
-8. Using the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper), create an application with the default Developer account subscribing to the service `Basic v2` plan in order to test the configuration.
-    ```script shell
-    3scale application create \
-    --description="Developer's Application to the Library Books API (V2 testing purposes)" \
-    ${THREESCALE_TOOLBOX_DESTINATION} john library-books-api basic-plan-v2 "Developer's App (v2)"
-    ```
-
-    - `Developer's App (v2)` application credentials in 3scale:
-
-        ![](./images/3scale_application_credentials_v2.png)
-
-    - `Developer's App (v2)` application credentials are dynamically synchronized in Red Hat Single Sign-On:
-
-        ![](./images/rh-sso_3scale_application_credentials_v2.png)
-
-9. Perform some testing of your configuration in the 3scale staging environment.
-
-    1. Test the forbidden `/v1/books` path 
-
-        > **NOTE**: Adjust the 3scale _Staging Public Base URL_ according to your environment.
+        > NOTE: `v2` application is not allowed to call the `/v1/books` endpoint
 
         - `GET` method:
             ```script shell
-            http https://library-books-api-${THREESCALE_TENANT}-apicast-staging.${OCP_DOMAIN}/v1/books "Authorization: Bearer ${TOKEN}"
+            http https://library-books-api-${THREESCALE_TENANT}-apicast-staging.${OCP_DOMAIN}/v1/books 'app_id: rhsi-hackfest-test-v1' 'app_key: 6cb351590d24531e9ddadbd03527f66b'
             ```
 
             The 3scale API gateway should reject the request.
             ```console
-            HTTP/1.1 403 Forbidden
+            HTTP/1.1 200 OK
+            [...]
+            deployment-location: OpenShift on AWS Cloud
             [...]
 
-            Authentication failed
+            [
+                {
+                    "authorName": "Mary Shelley",
+                    "copies": 10,
+                    "title": "Frankenstein",
+                    "year": 1818
+                },
+                {
+                    "authorName": "Charles Dickens",
+                    "copies": 5,
+                    "title": "A Christmas Carol",
+                    "year": 1843
+                },
+                {
+                    "authorName": "Jane Austen",
+                    "copies": 3,
+                    "title": "Pride and Prejudice",
+                    "year": 1813
+                }
+            ]
             ```
 
         - `POST` method:
@@ -250,29 +215,58 @@ The following environment variables are used in the scope of these instructions.
                 "copies": 100,
                 "title": "Test Book",
                 "year": 2023
-            }' | http https://library-books-api-${THREESCALE_TENANT}-apicast-production.${OCP_DOMAIN}/v1/books "Authorization: Bearer ${TOKEN}" "Content-type: application/json"
+            }' | http https://library-books-api-${THREESCALE_TENANT}-apicast-staging.${OCP_DOMAIN}/v1/books 'app_id: rhsi-hackfest-test-v1' 'app_key: 6cb351590d24531e9ddadbd03527f66b' "Content-type: application/json"
             ```
 
             The 3scale API gateway should reject the request.
             ```console
             HTTP/1.1 403 Forbidden
             [...]
+            deployment-location: OpenShift on AWS Cloud
+            [...]
 
-            Authentication failed
+            [
+                {
+                    "authorName": "Mary Shelley",
+                    "copies": 10,
+                    "title": "Frankenstein",
+                    "year": 1818
+                },
+                {
+                    "authorName": "Charles Dickens",
+                    "copies": 5,
+                    "title": "A Christmas Carol",
+                    "year": 1843
+                },
+                {
+                    "authorName": "Jane Austen",
+                    "copies": 3,
+                    "title": "Pride and Prejudice",
+                    "year": 1813
+                },
+                {
+                    "authorName": "Test Author",
+                    "copies": 100,
+                    "title": "Test Book",
+                    "year": 2023
+                }
+            ]
             ```
 
-    3. Test the authorized `/v2/books` path
+    2. Test the `/v2/books` path with the `v2` application credentials
 
-        > **NOTE**: Adjust the 3scale _Staging Public Base URL_ according to your environment.
+        > NOTE: `v1` application is not allowed to call the `/v2/books` endpoint
 
         - `GET` method:
             ```script shell
-            http https://library-books-api-${THREESCALE_TENANT}-apicast-staging.${OCP_DOMAIN}/v2/books "Authorization: Bearer ${TOKEN}"
+            http https://library-books-api-${THREESCALE_TENANT}-apicast-staging.${OCP_DOMAIN}/v2/books 'app_id: rhsi-hackfest-test-v2' 'app_key: 5fe5567a17d58bcf25f935cf517433f0'
             ```
 
-            The 3scale API gateway should authorize the request.
+            The 3scale API gateway should reject the request.
             ```console
             HTTP/1.1 200 OK
+            [...]
+            deployment-location: OpenShift on AWS Cloud
             [...]
 
             [
@@ -297,7 +291,7 @@ The following environment variables are used in the scope of these instructions.
                 {
                     "author": {
                         "birthDate": "1775-12-16T00:00:00.000Z",
-                        "name": "Charles Dickens"
+                        "name": "Jane Austen"
                     },
                     "copies": 3,
                     "title": "Pride and Prejudice",
@@ -310,18 +304,20 @@ The following environment variables are used in the scope of these instructions.
             ```script shell
             echo '{
                 "author": {
-                    "birthDate": "1980-01-01T00:00:00.000Z",
-                    "name": "Test Author"
+                    "birthDate": "1642-12-25T00:00:00.000Z",
+                    "name": "Sir Isaac Newton"
                 },
                 "copies": 31,
-                "title": "Test Book",
-                "year": 2023
-            }' | http https://library-books-api-${THREESCALE_TENANT}-apicast-staging.${OCP_DOMAIN}/v2/books "Authorization: Bearer ${TOKEN}" "Content-type: application/json"
+                "title": "Philosophiæ Naturalis Principia Mathematica",
+                "year": 1687
+            }' | http https://library-books-api-${THREESCALE_TENANT}-apicast-staging.${OCP_DOMAIN}/v2/books 'app_id: rhsi-hackfest-test-v2' 'app_key: 5fe5567a17d58bcf25f935cf517433f0' "Content-type: application/json"
             ```
 
-            The 3scale API gateway should authorize the request.
+            The 3scale API gateway should reject the request.
             ```console
-            HTTP/1.1 200 OK
+            HTTP/1.1 403 Forbidden
+            [...]
+            deployment-location: OpenShift on AWS Cloud
             [...]
 
             [
@@ -354,56 +350,18 @@ The following environment variables are used in the scope of these instructions.
                 },
                 {
                     "author": {
-                        "birthDate": "1980-01-01T00:00:00.000Z",
-                        "name": "Test Author"
+                        "birthDate": "1642-12-25T00:00:00.000Z",
+                        "name": "Sir Isaac Newton"
                     },
                     "copies": 31,
-                    "title": "Test Book",
-                    "year": 2023
+                    "title": "Philosophiæ Naturalis Principia Mathematica",
+                    "year": 1687
                 }
             ]
             ```
 
-    4. Test rate limit (5 calls/mn). After 5 consecutive requests, the 3scale API gateway should reject your call.
-
-        > **NOTE**: Adjust the 3scale _Staging Public Base URL_ according to your environment.
-        ```script shell
-        http https://library-books-api-${THREESCALE_TENANT}-apicast-staging.${OCP_DOMAIN}/v2/books "Authorization: Bearer ${TOKEN}"
-        ```
-
-        The 3scale API gateway should reject the request.
-        ```console
-        HTTP/1.1 429 Too Many Requests
-        [...]
-
-        Usage limit exceeded
-        ```
-
-10. After performing some tests of your configuration in the 3scale staging environment, you can now promote the latest staging Proxy Configuration to the 3scale production environment.
+6. After performing some tests of your configuration in the 3scale staging environment, you can now promote the latest staging Proxy Configuration to the 3scale production environment.
     ```script shell
-    3scale proxy-config promote ${THREESCALE_TOOLBOX_DESTINATION} library-books-api
+    oc apply -n rhsi-hackfest-3scale-amp \
+    -f ./library-books-api/threescale/proxyconfigs/library-books-api_promotetoprod.yaml
     ```
-
-11. Using the 3scale Admin Portail UI, edit the name of the product to `Library Books API (v2)`. Menu: _Products -> Library Books API (v1) -> Overview -> edit_
-
-    ![](./images/3scale_product_editname.png)
-
-12. Using the 3scale Admin Portail UI, update the ActiveDocs with the [LibraryBooksAPI_v2.json](./library-books-api/threescale/openapi/LibraryBooksAPI_v2.json). Menu: _Products -> Library Books API (v2) -> ActiveDocs -> edit_
-
-    > **NOTE**: Do not forget to change the name to `Library Books API (v2)`
-
-    ![](./images/3scale_product_activedoc_v2.png)
-
-13. Deprecate the `Basic v1` and `Premium v1` application plans so that no new applications can be created from the 3scale Developer Portal. Using the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper):
-
-    - Deprecate `Basic v1` plan 
-        ```script shell
-        3scale application-plan apply ${THREESCALE_TOOLBOX_DESTINATION} library-books-api basic-plan-v1 --hide
-        ```
-
-    - Deprecate `Premium v1` plan
-        ```script shell
-        3scale application-plan apply ${THREESCALE_TOOLBOX_DESTINATION} library-books-api premium-plan-v1 --hide
-        ```
-
-    ![](./images/3scale_application-plans-v1_deprecated_.png)
