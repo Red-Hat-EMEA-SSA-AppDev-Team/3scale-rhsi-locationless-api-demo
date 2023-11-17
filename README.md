@@ -76,7 +76,13 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
 #### Secure the _Library Books API_ API with Red Hat 3scale API Management
 
-Please follow these [instructions](./ThreescaleAPIProducts/README.md).
+1. Change to the `./ThreescaleAPIProducts` directory:
+
+    ```script shell
+    cd ./ThreescaleAPIProducts
+    ```
+
+2. Follow these [instructions](./ThreescaleAPIProducts/README.md).
 
 ### II. Prepare :cloud: AZURE Cloud environment
 
