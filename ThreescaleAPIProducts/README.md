@@ -2,16 +2,57 @@
 
 ## Purpose of this repository
 
-This repository contains instructions used to secure the [Library Books API](./library-books-api/) with Red Hat 3scale API Management. Some instructions involve the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper) using [Podman](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/building_running_and_managing_containers/index).
- 
-
-The [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper) is then used to secure the [Library Books API](./library-books-api/) with a Red Hat 3scale API Management tenant. Some instructions involve the _3scale Admin Portal_ UI.
-
-[Red Hat 3scale API Management v2.13](https://access.redhat.com/products/red-hat-3scale/) and [Red Hat 3scale Toolbox CLI v2.13](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper) are used in these instructions.
+This repository contains instructions used to secure the _Library Books API_ with Red Hat 3scale API Management. Some instructions involve the Red Hat 3scale Toolbox CLI using Podman.
 
 ## Prerequisites
 
-- [Red Hat OpenShift v4.12+](https://access.redhat.com/products/openshift/) with [Red Hat 3scale v2.13+](https://access.redhat.com/products/red-hat-3scale/) installed
+- [Red Hat OpenShift v4.12+](https://access.redhat.com/products/openshift/)
+- [Red Hat 3scale API Management platform v2.13+](https://access.redhat.com/products/red-hat-3scale/) is installed. Install instructions can be found [here](../install/3scale-amp/README.md).
+
+## Instructions 
+
+### I. Create the _rhsi-hackfest_ 3scale tenant that will be used to secure the _Library Books API_ services
+
+> NOTE: 3scale operator capabilities are leveraged in these instructions.
+
+1. Make sure you are in the `rhsi-hackfest-3scale-amp` OpenShift project where the 3scale API Management platform has been installed.
+    ```script shell
+    oc project rhsi-hackfest-3scale-amp
+    ```
+
+2. Create a secret which has the password that will be used to login to the tenant. 3scale operator will use this secret to set up the login credentials of the tenants.
+    ```script shell
+    oc apply -f ./threescale-tenant/tenant-password-secret.yaml
+    ```
+
+3. Create the `rhsi-hackfest` 3scale tenant
+
+    1. Edit the 3scale Tenant CR ([`./threescale-tenant/tenant-rhsi-hackfest.yaml`](./threescale-tenant/tenant-rhsi-hackfest.yaml)) to replace the OpenShift domain placeholder with that of your cluster:
+    
+        ```script shell
+        sed 's/apps.*com/<Replace with your cluster domain URl>/g' ./threescale-tenant/tenant-rhsi-hackfest.yaml > temp.yml && mv temp.yml ./threescale-tenant/tenant-rhsi-hackfest.yaml
+        ```
+
+        Example:
+
+        ```script shell
+        sed 's/apps.*com/apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/g' ./threescale-tenant/tenant-rhsi-hackfest.yaml > temp.yaml && mv temp.yaml ./threescale-tenant/tenant-rhsi-hackfest.yaml
+        ```
+
+    2. Create the 3scale tenant:
+        ```script shell
+        oc apply -f ./threescale-tenant/tenant-rhsi-hackfest.yaml
+        ```
+
+The 3scale `rhsi-hackfest` Admin Portal is then available at `https://rhsi-hackfest-admin.apps.${OCP_DOMAIN}` where:
+    - `${OCP_DOMAIN}`: the application domain of your Red Hat OpenShift cluster.
+
+![](./images/threescale-admin-portal.png)
+
+### II. Setup the 3scale-toolbox CLI
+
+#### Prerequisites
+
 - [Podman v4+](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/building_running_and_managing_containers/index)
     > **NOTE:** [Podman](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/building_running_and_managing_containers/index) must have the credentials to connect to the public Red Hat container registry ([registry.redhat.io](registry.redhat.io)) in order to pull the [3scale Toolbox image](https://catalog.redhat.com/software/containers/3scale-amp2/toolbox-rhel8/60ddc3173a73378722213e7e?container-tabs=gti&gti-tabs=registry-tokens).
     - The `podman login` command can generate a file with credentials (`${XDG_RUNTIME_DIR}/containers/auth.json`). Example: `podman login registry.redhat.io` and then enter the service account credentials to connect.
@@ -21,9 +62,7 @@ The [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/r
 
     ![3scaleAPIM_access-token-creation.png](./images/3scaleAPIM_access-token-creation.png)
 
-## Instructions 
-
-### :bulb: Notes
+#### :bulb: Notes
 
 The following environment variables are used in the scope of these instructions. Please, do set them according to your Red Hat 3scale environment.
 
@@ -33,8 +72,6 @@ The following environment variables are used in the scope of these instructions.
 - `THREESCALE_TENANT_ACCESS_TOKEN`: access token with read-write permissions on all scopes of the remote 3scale API Manager tenant.
 - `THREESCALE_TENANT_ADMIN_PORTAL_HOSTNAME`: FQDN of the remote 3scale API Manager tenant.
 - `THREESCALE_TOOLBOX_DESTINATION`: name of the remote 3scale API Manager tenant registered in the 3scale Toolbox CLI
-
-### I. Setup the 3scale-toolbox CLI
 
 1. Set the following environment variables according to your 3scale environment. Example:
     ```script shell
@@ -67,11 +104,11 @@ The following environment variables are used in the scope of these instructions.
     alias 3scale="podman run --rm -v ${ABSOLUTE_BASE_PATH}/3scale-rhsi-locationless-api-demo/ThreescaleAPIProducts/library-books-api:/tmp/toolbox/library-books-api:Z 3scale-toolbox-demo 3scale -k"
     ```
 
-### II. Secure the _Library Books API_ services using Red Hat 3scale API Management
+### III. Secure the _Library Books API_ services using Red Hat 3scale API Management
 
 > **NOTE**: Both versions `v1` and `v2` are bundled and exposed as a single API product _Library Books API v2_
 
-1. Login into the OpenShift cluster where [Red Hat 3scale API Management v2.13](https://access.redhat.com/products/red-hat-3scale/) is deployed
+1. Login into the OpenShift cluster where [Red Hat 3scale API Management v2.13](https://access.redhat.com/products/red-hat-3scale/) is deployed. It should be on :cloud: AWS cloud.
     ```script shell
     oc login...
     ```
