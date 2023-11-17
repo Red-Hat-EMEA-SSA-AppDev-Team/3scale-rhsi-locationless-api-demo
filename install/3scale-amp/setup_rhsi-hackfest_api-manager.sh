@@ -23,21 +23,11 @@ oc new-project $API_MANAGER_NS \
   --display-name="RHSI Hackfest - 3scale API Manager" \
   --description=$API_MANAGER_NS
 
-# Install Operators using the OLM
-## Create the namespace OperatorGroup
-oc apply -f ./2.13_manifests/rhsi-hackfest-3scale-amp-operatorgroup.yaml
-
-## The _Red Hat Integration - 3scale operator_ (Single Namespace scope)
+# Install _Red Hat Integration - 3scale operator_ (All namespaces scoped) using the OLM
 oc apply -f ./2.13_manifests/rhsi-hackfest-3scale-operator-subscription.yaml
 
-## The _Grafana Operator (Community)_ (single namespace scope)
-oc apply -f ./Observability/manifests/rhsi-hackfest-3scale-apim-grafana-operator-subscription.yaml
-
 # Wait for Operators to be installed
-watch oc get sub,csv,installPlan
-
-# Create the 3scale AMP Grafana instance
-oc apply -f ./Observability/manifests/rhsi-hackfest-grafana_cr.yaml
+watch oc get sub,csv
 
 # Create the 'system-seed' secret to customize the indicated parameters for the Red Hat 3scale API Management Platform
 oc create secret generic system-seed \
