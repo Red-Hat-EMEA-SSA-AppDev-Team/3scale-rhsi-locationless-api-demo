@@ -1,6 +1,6 @@
 # RHSI Hackfest Nov 14-16 2023 
 
-## Securing and exposing APIs location-lessly using Red Hat 3scale API Management and Red Hat Service Interconnect
+## Securing and exposing APIs deployed across multiple environments/locations using Red Hat 3scale API Management and Red Hat Service Interconnect
 
 ### Overview
 
@@ -35,7 +35,10 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
 #### Prerequisites
 
-TODO
+- [Red Hat OpenShift v4.12+](https://access.redhat.com/products/openshift/)
+- [Red Hat 3scale v2.13+](https://access.redhat.com/products/red-hat-3scale/)
+- [Skupper CLI](https://access.redhat.com/documentation/en-us/red_hat_service_interconnect/1.4/html/installation/installing-skupper-cli). 
+    >NOTE:  [Skupper CLI v1.4.2-rh-1](https://access.redhat.com/documentation/en-us/red_hat_service_interconnect/1.4/html/installation/installing-skupper-cli) has been used in the following instructions.
 
 #### Deploy the _Library Books API_ backend services
 
@@ -54,13 +57,15 @@ TODO
 
 #### Secure the _Library Books API_ API with Red Hat 3scale API Management
 
-TODO
+Please follow these [instructions](./ThreescaleAPIProducts/README.md).
 
 ### Prepare :cloud: AZURE Cloud environment
 
 #### Prerequisites
 
-TODO
+- [Red Hat OpenShift v4.12+](https://access.redhat.com/products/openshift/)
+- [Skupper CLI](https://access.redhat.com/documentation/en-us/red_hat_service_interconnect/1.4/html/installation/installing-skupper-cli). 
+    >NOTE:  [Skupper CLI v1.4.2-rh-1](https://access.redhat.com/documentation/en-us/red_hat_service_interconnect/1.4/html/installation/installing-skupper-cli) has been used in the following instructions.
 
 #### Deploy the _Library Books API_ backend services
 
@@ -143,3 +148,7 @@ TODO
     skupper expose deployment/books-api-v1 --address books-api-v1 --port 80 --target-port 8080 --protocol tcp
     skupper expose deployment/books-api-v2 --address books-api-v2 --port 80 --target-port 8080 --protocol tcp
     ```
+
+### Tests
+
+TODO
