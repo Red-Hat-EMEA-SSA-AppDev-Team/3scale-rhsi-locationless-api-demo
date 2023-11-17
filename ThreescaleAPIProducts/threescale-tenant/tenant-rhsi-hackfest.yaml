@@ -1,13 +1,13 @@
 apiVersion: capabilities.3scale.net/v1alpha1
 kind: Tenant
 metadata:
-  name: rhsi-hackefest-tenant
+  name: rhsi-hackfest-tenant
 spec:
   email: admin@hackfest.example.com
   masterCredentialsRef:
     name: system-seed
     namespace: rhsi-hackfest-3scale-amp
-  organizationName: rhsi-hackefest
+  organizationName: rhsi-hackfest
   passwordCredentialsRef:
     name: tenant-admin-secret
     namespace: rhsi-hackfest-3scale-amp
