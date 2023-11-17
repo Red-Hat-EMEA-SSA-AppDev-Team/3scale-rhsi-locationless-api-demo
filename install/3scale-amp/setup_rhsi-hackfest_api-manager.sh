@@ -14,7 +14,7 @@ API_MASTER_ACCESS_TOKEN="2075e314a378c9f01232d92f113f359d671620ce1de00255c55cf19
 ## Tenant API access token
 API_TENANT_ACCESS_TOKEN="88fb895da81b95270d3bc196b86edc211fa570fdec3d8f80581fa7fce4015512"
 ## Name of the initial tenant
-TENANT_NAME="rhsi-hackfest"
+TENANT_NAME="3scale"
 ## Password for the initial tenant admin account (admin)
 TENANT_ADMIN_PASSWD="openshift"
 
