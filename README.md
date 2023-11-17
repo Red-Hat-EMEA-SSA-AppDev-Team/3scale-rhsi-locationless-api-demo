@@ -176,4 +176,57 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
 ### IV. Tests
 
-TODO
+#### Prerequisites
+
+- All the above steps have been completed
+- The [`hey CLI`](https://github.com/rakyll/hey) has been used to generate load on the secured API services
+
+#### Verify local AWS API service is favored when both AWS and AZURE services are running
+
+> NOTE: `${OCP_DOMAIN}` environment variable represents the application domain of your Red Hat OpenShift cluster hosting the 3scale API Management platform on AWS cloud.
+
+1. Generate some HTTP requests load on the `/v2/books` endpoint using 50 worker threads for 30 seconds:
+    ```script shell
+    hey -c 50 -z 30s -m GET \
+    -H 'app_id: rhsi-hackfest-test-v2' \
+    -H 'app_key: 5fe5567a17d58bcf25f935cf517433f0' \
+    https://library-books-api-rhsi-hackfest-apicast-production.${OCP_DOMAIN}/v2/books
+    ```
+
+2. The Skupper web console shows that all traffic goes to `aws-ocp` RHSI site (local)
+
+![](./images/rhsi-books-api-v2_localfavoured-1.png)
+![](./images/rhsi-books-api-v2_localfavoured-2.png)
+
+#### Verify resilience and remote access when AWS API service are not running
+
+> NOTE: `${OCP_DOMAIN}` environment variable represents the application domain of your Red Hat OpenShift cluster hosting the 3scale API Management platform on AWS cloud.
+
+1. Scale down to zero the _Library Books API_ services deployed on AWS cloud:
+
+    1. Login to the AWS OCP cluster
+        ```shell script
+        oc login...
+        ```
+    2. Make sure the current project is `rhsi-hackfest-apibackend`
+        ```shell script
+        oc project rhsi-hackfest-apibackend
+        ```
+
+    3. Stop the _Library Books API_ services
+        ```shell script
+        oc scale --replicas=0 deploy/books-api-v1 deploy/books-api-v2
+        ```
+
+2. Generate some HTTP requests load on the `/v2/books` endpoint using 50 worker threads for 30 seconds:
+    ```script shell
+    hey -c 50 -z 30s -m GET \
+    -H 'app_id: rhsi-hackfest-test-v2' \
+    -H 'app_key: 5fe5567a17d58bcf25f935cf517433f0' \
+    https://library-books-api-rhsi-hackfest-apicast-production.${OCP_DOMAIN}/v2/books
+    ```
+
+3. The Skupper web console shows that all traffic goes to `aws-ocp` RHSI site (local)
+
+![](./images/rhsi-books-api-v2_resilience_remoteaccess-1.png)
+![](./images/rhsi-books-api-v2_resilience_remoteaccess-2.png)
