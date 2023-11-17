@@ -4,7 +4,7 @@
 ## Namespace for the Red Hat 3Scale API Management Platform
 API_MANAGER_NS="rhsi-hackfest-3scale-amp"
 ## Password for the master admin account (master)
-API_MASTER_PASSWORD="P!ssw0rd"
+API_MASTER_PASSWORD="openshift"
 ## OpenShift domain suffix
 OCP_DOMAIN="cluster-8bcs7.8bcs7.sandbox2056.opentlc.com"
 ## OpenShift routes domain suffix
@@ -16,7 +16,7 @@ API_TENANT_ACCESS_TOKEN="88fb895da81b95270d3bc196b86edc211fa570fdec3d8f80581fa7f
 ## Name of the initial tenant
 TENANT_NAME="rhsi-hackfest"
 ## Password for the initial tenant admin account (admin)
-TENANT_ADMIN_PASSWD="P!ssw0rd"
+TENANT_ADMIN_PASSWD="openshift"
 
 # Create the`rhsi-hackfest-3scale-amp` _OpenShift namespace_
 oc new-project $API_MANAGER_NS \
@@ -47,7 +47,7 @@ oc create secret generic system-seed \
   --from-literal=MASTER_DOMAIN=master \
   --from-literal=ADMIN_USER=admin \
   --from-literal=ADMIN_PASSWORD="${TENANT_ADMIN_PASSWD}" \
-  --from-literal=ADMIN_EMAIL="admin-hackfest@example.com" \
+  --from-literal=ADMIN_EMAIL="admin@hackfest.example.com" \
   --from-literal=ADMIN_ACCESS_TOKEN="${API_TENANT_ACCESS_TOKEN}" \
   --from-literal=TENANT_NAME="${TENANT_NAME}" \
   -n $API_MANAGER_NS
