@@ -172,7 +172,7 @@ The following environment variables are used in the scope of these instructions.
 
     1. Test the `/v1/books` path with the `v1` application credentials
 
-        > NOTE: `v2` application is not allowed to call the `/v1/books` endpoint
+        > NOTE: `v2` application is not allowed to call the `/v1/books` endpoint. Take note of the `deployment-location` HTTP header in the response.
 
         - `GET` method:
             ```script shell
@@ -220,7 +220,7 @@ The following environment variables are used in the scope of these instructions.
 
             The 3scale API gateway should reject the request.
             ```console
-            HTTP/1.1 403 Forbidden
+            HTTP/1.1 201 Created
             [...]
             deployment-location: OpenShift on AWS Cloud
             [...]
@@ -255,7 +255,7 @@ The following environment variables are used in the scope of these instructions.
 
     2. Test the `/v2/books` path with the `v2` application credentials
 
-        > NOTE: `v1` application is not allowed to call the `/v2/books` endpoint
+        > NOTE: `v1` application is not allowed to call the `/v2/books` endpoint. Take note of the `deployment-location` HTTP header in the response.
 
         - `GET` method:
             ```script shell
@@ -315,7 +315,7 @@ The following environment variables are used in the scope of these instructions.
 
             The 3scale API gateway should reject the request.
             ```console
-            HTTP/1.1 403 Forbidden
+            HTTP/1.1 201 Created
             [...]
             deployment-location: OpenShift on AWS Cloud
             [...]
