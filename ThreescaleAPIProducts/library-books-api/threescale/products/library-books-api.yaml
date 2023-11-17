@@ -6,19 +6,14 @@ spec:
   name: Library Books API (v2)
   systemName: library-books-api
   description: Manages a library books inventory
+  providerAccountRef:
+    name: tenant-secret
   deployment:
     apicastHosted:
       authentication:
-        oidc:
-          issuerType: keycloak
-          issuerEndpoint: https://threescale-zync:JFNaTEnwxlsJHLFLbp9tSh2DynM2GdoK@sso.apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/auth/realms/demo-prod
-          jwtClaimWithClientID: azp
-          jwtClaimWithClientIDType: plain
-          authenticationFlow:
-            standardFlowEnabled: false
-            implicitFlowEnabled: false
-            serviceAccountsEnabled: true
-            directAccessGrantsEnabled: false
+        appKeyAppID:
+          appID: app_id
+          appKey: app_key
           credentials: headers
   mappingRules:
     - httpMethod: POST
@@ -151,7 +146,7 @@ spec:
       name: Basic v1
       appsRequireApproval: false
       trialPeriod: 0
-      setupFee: '0.0'
+      setupFee: '0.00'
       costMonth: '0.00'
       published: false
       pricingRules: []
@@ -174,30 +169,30 @@ spec:
           systemName: getbooks_v2
     premium-plan-v1:
       name: Premium v1
-      appsRequireApproval: true
+      appsRequireApproval: false
       trialPeriod: 0
-      setupFee: '15.0'
-      costMonth: '5.0'
+      setupFee: '15.00'
+      costMonth: '5.00'
       published: false
       pricingRules:
       - from: 1
         to: 200
-        pricePerUnit: 0.05
+        pricePerUnit: '0.05'
         metricMethodRef:
           systemName: addnewbook_v1
       - from: 201
-        to: 
-        pricePerUnit: 0.01
+        to: 1000000
+        pricePerUnit: '0.01'
         metricMethodRef:
           systemName: addnewbook_v1
       - from: 1
         to: 200
-        pricePerUnit: 0.05
+        pricePerUnit: '0.05'
         metricMethodRef:
           systemName: getbooks_v1
       - from: 201
-        to: 
-        pricePerUnit: 0.01
+        to: 1000000
+        pricePerUnit: '0.01'
         metricMethodRef:
           systemName: getbooks_v1
       limits:
@@ -221,8 +216,8 @@ spec:
       name: Basic v2
       appsRequireApproval: false
       trialPeriod: 0
-      setupFee: '0.0'
-      costMonth: '0.0'
+      setupFee: '0.00'
+      costMonth: '0.00'
       published: true
       pricingRules: []
       limits:
@@ -244,30 +239,30 @@ spec:
           systemName: getbooks_v2
     premium-plan-v2:
       name: Premium v2
-      appsRequireApproval: true
+      appsRequireApproval: false
       trialPeriod: 0
-      setupFee: '15.0'
-      costMonth: '5.0'
+      setupFee: '15.00'
+      costMonth: '5.00'
       published: true
       pricingRules:
       - from: 1
         to: 200
-        pricePerUnit: 0.05
+        pricePerUnit: '0.05'
         metricMethodRef:
           systemName: addnewbook_v2
       - from: 201
-        to: 
-        pricePerUnit: 0.01
+        to: 1000000
+        pricePerUnit: '0.01'
         metricMethodRef:
           systemName: addnewbook_v2
       - from: 1
         to: 200
-        pricePerUnit: 0.05
+        pricePerUnit: '0.05'
         metricMethodRef:
           systemName: getbooks_v2
       - from: 201
-        to: 
-        pricePerUnit: 0.01
+        to: 1000000
+        pricePerUnit: '0.01'
         metricMethodRef:
           systemName: getbooks_v2
       limits:
@@ -276,7 +271,7 @@ spec:
         metricMethodRef:
           systemName: addnewbook_v1
       - period: minute
-        value: 1200
+        value: 100000
         metricMethodRef:
           systemName: addnewbook_v2
       - period: eternity
@@ -284,7 +279,7 @@ spec:
         metricMethodRef:
           systemName: getbooks_v1
       - period: minute
-        value: 1200
+        value: 100000
         metricMethodRef:
           systemName: getbooks_v2
   backendUsages:

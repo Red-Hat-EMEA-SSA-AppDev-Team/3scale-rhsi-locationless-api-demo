@@ -7,3 +7,5 @@ spec:
   systemName: books-api-v1-backend
   privateBaseURL: http://books-api-v1.rhsi-hackfest-apibackend.svc.cluster.local:80/api/v1
   description: 'Manages a library books inventory (v1)'
+  providerAccountRef:
+    name: tenant-secret

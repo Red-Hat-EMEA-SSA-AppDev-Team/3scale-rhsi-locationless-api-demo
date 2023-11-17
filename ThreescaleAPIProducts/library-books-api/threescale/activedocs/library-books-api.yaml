@@ -3,10 +3,12 @@ kind: ActiveDoc
 metadata:
   name: library-books-api
 spec:
+  providerAccountRef:
+    name: tenant-secret
   activeDocOpenAPIRef:
     url: >-
       https://raw.githubusercontent.com/jeanNyil/rhsi-hackfest-nov2023/main/ThreescaleAPIProducts/library-books-api/threescale/openapi/LibraryBooksAPI_v2.yaml
   name: Library Books API (v2)
   productSystemName: library-books-api
   published: true
-  systemName: library-books-api
+  systemName: librarybooksapi
