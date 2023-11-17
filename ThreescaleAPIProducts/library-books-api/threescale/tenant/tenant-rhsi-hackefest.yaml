@@ -1,0 +1,17 @@
+apiVersion: capabilities.3scale.net/v1alpha1
+kind: Tenant
+metadata:
+  name: rhsi-hackefest-tenant
+spec:
+  email: admin@example.openshift.com
+  masterCredentialsRef:
+    name: system-seed
+    namespace: 3scale-amp
+  organizationName: rhsi-hackefest
+  passwordCredentialsRef:
+    name: tenant-admin-secret
+    namespace: 3scale-amp
+  systemMasterUrl: 'https://master.apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com'
+  tenantSecretRef:
+    name: tenant-secret
+  username: admin

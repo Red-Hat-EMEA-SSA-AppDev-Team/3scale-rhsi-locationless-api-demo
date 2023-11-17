@@ -1,0 +1,294 @@
+apiVersion: capabilities.3scale.net/v1beta1
+kind: Product
+metadata:
+  name: library-books-api
+spec:
+  name: Library Books API (v2)
+  systemName: library-books-api
+  description: Manages a library books inventory
+  deployment:
+    apicastHosted:
+      authentication:
+        oidc:
+          issuerType: keycloak
+          issuerEndpoint: https://threescale-zync:JFNaTEnwxlsJHLFLbp9tSh2DynM2GdoK@sso.apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/auth/realms/demo-prod
+          jwtClaimWithClientID: azp
+          jwtClaimWithClientIDType: plain
+          authenticationFlow:
+            standardFlowEnabled: false
+            implicitFlowEnabled: false
+            serviceAccountsEnabled: true
+            directAccessGrantsEnabled: false
+          credentials: headers
+  mappingRules:
+    - httpMethod: POST
+      pattern: "/v2/books$"
+      metricMethodRef: addnewbook_v2
+      increment: 1
+      last: false
+    - httpMethod: GET
+      pattern: "/v2/books$"
+      metricMethodRef: getbooks_v2
+      increment: 1
+      last: false
+    - httpMethod: GET
+      pattern: "/v1/books$"
+      metricMethodRef: getbooks_v1
+      increment: 1
+      last: false
+    - httpMethod: POST
+      pattern: "/v1/books$"
+      metricMethodRef: addnewbook_v1
+      increment: 1
+      last: false
+  methods:
+      getbooks_v1:
+        friendlyName: getBooks-v1
+        description: Gets a list of all `book-v1` entities from the inventory.
+      addnewbook_v1:
+        friendlyName: addNewBook-v1
+        description: Adds a new `book-v1` entity in the inventory.
+      addnewbook_v2:
+        friendlyName: addNewBook-v2
+        description: Adds a new `book-v2` entity in the inventory.
+      getbooks_v2:
+        friendlyName: getBooks-v2
+        description: Gets a list of all `book-v2` entities.
+  metrics:
+      hits:
+        friendlyName: Hits
+        unit: hit
+        description: Number of API hits
+      status-200:
+        friendlyName: status-200
+        unit: count
+        description: Number of 200 HTTP return codes from the upstream API backend
+      status-201:
+        friendlyName: status-201
+        unit: count
+        description: Number of 201 HTTP return codes from the upstream API backend
+      status-400:
+        friendlyName: status-400
+        unit: count
+        description: Number of 400 HTTP return codes from the upstream API backend
+      status-404:
+        friendlyName: status-404
+        unit: count
+        description: Number of 404 HTTP return codes from the upstream API backend
+      status-500:
+        friendlyName: status-500
+        unit: count
+        description: Number of 500 HTTP return codes from the upstream API backend
+  policies:
+    - name: cors
+      version: builtin
+      configuration:
+        allow_credentials: true
+        allow_headers:
+        - Content-Type
+        - app_id
+        - app_key
+        allow_methods:
+        - GET
+        - OPTIONS
+        - POST
+        allow_origin: "*"
+      enabled: true
+    - name: caching
+      version: builtin
+      configuration:
+        caching_type: resilient
+      enabled: true
+    - name: logging
+      version: builtin
+      configuration:
+        condition:
+          combine_op: and
+        enable_access_logs: true
+        custom_logging: '[{{time_local}}] [client IP: "{{headers[''x-forwarded-for'']}}" - client Id: "{{jwt.azp}}"] [local: "{{host}}:{{server_port}}"] [remote: "{{remote_addr}}:{{remote_port}}"] [request: "{{request}}" - service Id: "{{service.id}}" - service name: "{{service.system_name}}" - status: "{{status}}" - body bytes sent: "{{body_bytes_sent}}" - request time: "{{request_time}}" - post action impact: "{{post_action_impact}}"]'
+      enabled: true
+    - name: custom_metrics
+      version: builtin
+      configuration:
+        rules:
+        - increment: '1'
+          metric: status-{{status}}
+          condition:
+            operations:
+            - left_type: liquid
+              right_type: plain
+              op: "=="
+              right: '200'
+              left: "{{status}}"
+            - left_type: liquid
+              right_type: plain
+              op: "=="
+              right: '201'
+              left: "{{status}}"
+            - left_type: liquid
+              right_type: plain
+              op: "=="
+              right: '400'
+              left: "{{status}}"
+            - left_type: liquid
+              right_type: plain
+              op: "=="
+              right: '404'
+              left: "{{status}}"
+            - left_type: liquid
+              right_type: plain
+              op: "=="
+              right: '500'
+              left: "{{status}}"
+            combine_op: or
+      enabled: true
+    - name: apicast
+      version: builtin
+      configuration: {}
+      enabled: true
+  applicationPlans:
+    basic-plan-v1:
+      name: Basic v1
+      appsRequireApproval: false
+      trialPeriod: 0
+      setupFee: '0.0'
+      costMonth: '0.00'
+      published: false
+      pricingRules: []
+      limits:
+      - period: minute
+        value: 5
+        metricMethodRef:
+          systemName: addnewbook_v1
+      - period: eternity
+        value: 0
+        metricMethodRef:
+          systemName: addnewbook_v2
+      - period: minute
+        value: 5
+        metricMethodRef:
+          systemName: getbooks_v1
+      - period: eternity
+        value: 0
+        metricMethodRef:
+          systemName: getbooks_v2
+    premium-plan-v1:
+      name: Premium v1
+      appsRequireApproval: true
+      trialPeriod: 0
+      setupFee: '15.0'
+      costMonth: '5.0'
+      published: false
+      pricingRules:
+      - from: 1
+        to: 200
+        pricePerUnit: 0.05
+        metricMethodRef:
+          systemName: addnewbook_v1
+      - from: 201
+        to: 
+        pricePerUnit: 0.01
+        metricMethodRef:
+          systemName: addnewbook_v1
+      - from: 1
+        to: 200
+        pricePerUnit: 0.05
+        metricMethodRef:
+          systemName: getbooks_v1
+      - from: 201
+        to: 
+        pricePerUnit: 0.01
+        metricMethodRef:
+          systemName: getbooks_v1
+      limits:
+      - period: minute
+        value: 1200
+        metricMethodRef:
+          systemName: addnewbook_v1
+      - period: eternity
+        value: 0
+        metricMethodRef:
+          systemName: addnewbook_v2
+      - period: minute
+        value: 1200
+        metricMethodRef:
+          systemName: getbooks_v1
+      - period: eternity
+        value: 0
+        metricMethodRef:
+          systemName: getbooks_v2
+    basic-plan-v2:
+      name: Basic v2
+      appsRequireApproval: false
+      trialPeriod: 0
+      setupFee: '0.0'
+      costMonth: '0.0'
+      published: true
+      pricingRules: []
+      limits:
+      - period: eternity
+        value: 0
+        metricMethodRef:
+          systemName: addnewbook_v1
+      - period: minute
+        value: 5
+        metricMethodRef:
+          systemName: addnewbook_v2
+      - period: eternity
+        value: 0
+        metricMethodRef:
+          systemName: getbooks_v1
+      - period: minute
+        value: 5
+        metricMethodRef:
+          systemName: getbooks_v2
+    premium-plan-v2:
+      name: Premium v2
+      appsRequireApproval: true
+      trialPeriod: 0
+      setupFee: '15.0'
+      costMonth: '5.0'
+      published: true
+      pricingRules:
+      - from: 1
+        to: 200
+        pricePerUnit: 0.05
+        metricMethodRef:
+          systemName: addnewbook_v2
+      - from: 201
+        to: 
+        pricePerUnit: 0.01
+        metricMethodRef:
+          systemName: addnewbook_v2
+      - from: 1
+        to: 200
+        pricePerUnit: 0.05
+        metricMethodRef:
+          systemName: getbooks_v2
+      - from: 201
+        to: 
+        pricePerUnit: 0.01
+        metricMethodRef:
+          systemName: getbooks_v2
+      limits:
+      - period: eternity
+        value: 0
+        metricMethodRef:
+          systemName: addnewbook_v1
+      - period: minute
+        value: 1200
+        metricMethodRef:
+          systemName: addnewbook_v2
+      - period: eternity
+        value: 0
+        metricMethodRef:
+          systemName: getbooks_v1
+      - period: minute
+        value: 1200
+        metricMethodRef:
+          systemName: getbooks_v2
+  backendUsages:
+    books-api-v1-backend:
+      path: "/v1"
+    books-api-v2-backend:
+      path: "/v2"

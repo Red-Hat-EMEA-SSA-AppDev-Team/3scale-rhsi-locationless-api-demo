@@ -1,0 +1,80 @@
+# Reference: https://github.com/3scale/3scale-operator/blob/3scale-2.13.0-GA/doc/apimanager-reference.md
+apiVersion: apps.3scale.net/v1alpha1
+kind: APIManager
+metadata:
+  name: apimanager
+spec:
+  wildcardDomain: apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com
+  appLabel: 3scale-api-management
+  # Resource requirements distabled for DEMO purposes
+  resourceRequirementsEnabled: false
+  apicast:
+    managementAPI: status
+    openSSLVerify: false
+    responseCodes: true
+    productionSpec:
+      replicas: 1
+      logLevel: info
+      # OpenTracing configuration
+      openTracing:
+        # Controls whether OpenTracing integration with APIcast is enabled - default: false
+        enabled: true
+        # Controls which OpenTracing library is loaded. At the moment the supported values are: jaeger. 
+        # If not set, jaeger will be used
+        tracingLibrary: jaeger
+        # Secret reference with the tracing library-specific configuration. 
+        # Each supported tracing library provides a default configuration file which is used if tracingConfigSecretRef 
+        # is not specified
+        tracingConfigSecretRef: 
+          name: threescale-prod-jaeger-conf-secret
+    stagingSpec:
+      replicas: 1
+      logLevel: info
+      # OpenTracing configuration
+      openTracing:
+        # Controls whether OpenTracing integration with APIcast is enabled - default: false
+        enabled: true
+        # Controls which OpenTracing library is loaded. At the moment the supported values are: jaeger. 
+        # If not set, jaeger will be used
+        tracingLibrary: jaeger
+        # Secret reference with the tracing library-specific configuration. 
+        # Each supported tracing library provides a default configuration file which is used if tracingConfigSecretRef 
+        # is not specified
+        tracingConfigSecretRef: 
+          name: threescale-staging-jaeger-conf-secret
+  backend:
+    redisPersistentVolumeClaim:
+      # Create a Read-Write-Once (RWO) PVC (backend-redis-storage) that is based on Ceph® RBDs
+      storageClassName: gp3-csi
+    listenerSpec:
+      replicas: 1
+    workerSpec:
+      replicas: 1
+    cronSpec:
+      replicas: 1
+  system:
+    # Create a Read-Write-Once (RWO) PVC (system-redis-storage) that is based on Ceph® RBDs
+    redisPersistentVolumeClaim:
+      storageClassName: gp3-csi
+    fileStorage:
+      # Use S3 as the System's file storage
+      simpleStorageService:
+        # Local object reference to the secret to be used where the AWS configuration is stored
+        configurationSecretRef:
+          name: threescale-aws-s3-auth-secret
+    database:
+      postgresql:
+        # Create a Read-Write-Once (RWO) PVC (postgresql-data) that is based on Ceph® RBDs
+        persistentVolumeClaim:
+          storageClassName: gp3-csi
+          resources:
+            requests: 30Gi
+    appSpec:
+      replicas: 1
+    sidekiqSpec:
+      replicas: 1
+  zync:
+    appSpec:
+      replicas: 1
+    queSpec:
+      replicas: 1
