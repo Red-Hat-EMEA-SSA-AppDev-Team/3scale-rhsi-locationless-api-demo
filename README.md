@@ -195,8 +195,11 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
 2. The Skupper web console shows that all traffic goes to `aws-ocp` RHSI site (local)
 
-![](./images/rhsi-books-api-v2_localfavoured-1.png)
-![](./images/rhsi-books-api-v2_localfavoured-2.png)
+    ![](./images/rhsi-books-api-v2_localfavoured-1.png)
+
+    - All authorized HTTP requests are handled by the `aws-ocp` (local) server site
+
+    ![](./images/rhsi-books-api-v2_localfavoured-2.png)
 
 #### Verify resilience and remote access when AWS API service are not running
 
@@ -226,7 +229,10 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
     https://library-books-api-rhsi-hackfest-apicast-production.${OCP_DOMAIN}/v2/books
     ```
 
-3. The Skupper web console shows that all traffic goes to `aws-ocp` RHSI site (local)
+3. The Skupper web console shows that all traffic goes to `aws-azure` RHSI site (local)
 
-![](./images/rhsi-books-api-v2_resilience_remoteaccess-1.png)
-![](./images/rhsi-books-api-v2_resilience_remoteaccess-2.png)
+    ![](./images/rhsi-books-api-v2_resilience_remoteaccess-1.png)
+        
+    - All authorized HTTP requests are handled by the `aws-azure` (remote) server site
+
+    ![](./images/rhsi-books-api-v2_resilience_remoteaccess-2.png)
