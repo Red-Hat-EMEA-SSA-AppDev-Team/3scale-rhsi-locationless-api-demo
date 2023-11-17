@@ -33,13 +33,13 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
 ### I. Prepare :cloud: AWS Cloud environment
 
-#### 1. Prerequisites
+#### Prerequisites
 
 - [Red Hat OpenShift v4.12+](https://access.redhat.com/products/openshift/)
 - [Skupper CLI](https://access.redhat.com/documentation/en-us/red_hat_service_interconnect/1.4/html/installation/installing-skupper-cli). 
     >NOTE:  [Skupper CLI v1.4.2-rh-1](https://access.redhat.com/documentation/en-us/red_hat_service_interconnect/1.4/html/installation/installing-skupper-cli) has been used in the following instructions.
 
-#### 2. Deploy the _Library Books API_ backend services
+#### Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
@@ -54,27 +54,27 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
     oc set env deploy/books-api-v2 DEPLOYMENT_LOCATION="OpenShift on AWS Cloud"
     ```
 
-#### 3. Install Red Hat 3scale API Management v2.13
+#### Install Red Hat 3scale API Management v2.13
 
 Please follow these [instructions](./install/3scale-amp/README.md).
 
-#### 4. Install Red Hat OpenShift distributed tracing platform for observability
+#### Install Red Hat OpenShift distributed tracing platform for observability
 
 Please follow these [instructions](./install/Observability/README.md).
 
-#### 5. Secure the _Library Books API_ API with Red Hat 3scale API Management
+#### Secure the _Library Books API_ API with Red Hat 3scale API Management
 
 Please follow these [instructions](./ThreescaleAPIProducts/README.md).
 
 ### II. Prepare :cloud: AZURE Cloud environment
 
-#### 1. Prerequisites
+#### Prerequisites
 
 - [Red Hat OpenShift v4.12+](https://access.redhat.com/products/openshift/)
 - [Skupper CLI](https://access.redhat.com/documentation/en-us/red_hat_service_interconnect/1.4/html/installation/installing-skupper-cli). 
     >NOTE:  [Skupper CLI v1.4.2-rh-1](https://access.redhat.com/documentation/en-us/red_hat_service_interconnect/1.4/html/installation/installing-skupper-cli) has been used in the following instructions.
 
-#### 2. Deploy the _Library Books API_ backend services
+#### Deploy the _Library Books API_ backend services
 
 1. Create the `rhsi-hackfest-apibackend` namespace:
     ```
@@ -91,7 +91,7 @@ Please follow these [instructions](./ThreescaleAPIProducts/README.md).
 
 ### III. Configure the RHSI network
 
-#### 1. :cloud: AWS Cloud Red Hat Service Interconnect Router
+#### :cloud: AWS Cloud Red Hat Service Interconnect Router
 
 1. Login to the AWS OCP cluster
     ```shell script
@@ -126,7 +126,7 @@ Please follow these [instructions](./ThreescaleAPIProducts/README.md).
     skupper token create secret_aws_azure.token
     ```
 
-#### 2. :cloud: AZURE Cloud Red Hat Service Interconnect Router
+#### :cloud: AZURE Cloud Red Hat Service Interconnect Router
 
 1. login to the AZURE OCP cluster
     ```shell script
