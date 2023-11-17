@@ -74,7 +74,7 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
 2. Follow these [instructions](./install/Observability/README.md).
 
-#### Secure the _Library Books API_ API with Red Hat 3scale API Management
+#### Secure the _Library Books API_ with Red Hat 3scale API Management
 
 1. Change to the `./ThreescaleAPIProducts` directory:
 
