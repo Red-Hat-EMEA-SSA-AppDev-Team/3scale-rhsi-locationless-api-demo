@@ -5,7 +5,7 @@
     1. Edit the 3scale APIManager CR ([`./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml`](./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml)) to replace the OpenShift domain placeholder with that of your cluster:
     
         ```script shell
-        sed 's/apps.*com/<Replace with your cluster domain URl>/g' ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml > temp.yml && mv temp.yml ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml
+        sed 's/apps.*com/<Replace with your OpenShift cluster application domain URI>/g' ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml > temp.yml && mv temp.yml ./2.13_manifests/rhsi-hackfest-apimanager_cr.yaml
         ```
 
         Example:

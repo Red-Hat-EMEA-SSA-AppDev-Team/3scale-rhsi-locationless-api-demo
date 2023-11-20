@@ -46,7 +46,25 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
     oc apply -f ./ThreescaleAPIProducts/library-books-api/openshift_manifests/rhsi-hackfest-apibackend_namespace.yaml
     ```
 
-2. Deploy the _Library Books API_ service to be secured by 3scale:
+2. Edit the _Library Books API_ services configMaps in the [`./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v1.yaml`](./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v1.yaml) and [`./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v2.yaml`](./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v2.yaml) manifests to replace the OpenShift domain placeholder with that of your cluster:
+
+    > NOTE: This sets the URL to the Jaeger server collector for distributed tracing.
+    
+    ```script shell
+    sed 's/apps.*com/<Replace with your OpenShift cluster application domain URI>/g' ./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v1.yaml > temp.yml && mv temp.yml ./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v1.yaml
+    
+    sed 's/apps.*com/<Replace with your OpenShift cluster application domain URI>/g' ./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v2.yaml > temp.yml && mv temp.yml ./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v2.yaml
+    ```
+
+    Example:
+
+    ```script shell
+    sed 's/apps.*com/apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/g' ./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v1.yaml > temp.yaml && mv temp.yaml ./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v1.yaml
+    
+    sed 's/apps.*com/apps.cluster-8bcs7.8bcs7.sandbox2056.opentlc.com/g' ./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v2.yaml > temp.yaml && mv temp.yaml ./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v2.yaml
+    ```
+
+3. Deploy the _Library Books API_ service to be secured by 3scale:
     ```
     oc -n rhsi-hackfest-apibackend apply -f ./ThreescaleAPIProducts/library-books-api/openshift_manifests/books-api-v1.yaml
     oc set env deploy/books-api-v1 DEPLOYMENT_LOCATION="OpenShift on AWS Cloud"
@@ -197,7 +215,7 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
     ![](./images/rhsi-books-api-v2_localfavoured-1.png)
 
-    - All authorized HTTP requests are handled by the `aws-ocp` (local) server site
+    - All authorized HTTP requests are handled by the `aws-ocp` (local) server site.
 
     ![](./images/rhsi-books-api-v2_localfavoured-2.png)
 
@@ -233,6 +251,6 @@ Red Hat Service Interconnect can be leveraged in order to easily secure multiple
 
     ![](./images/rhsi-books-api-v2_resilience_remoteaccess-1.png)
         
-    - All authorized HTTP requests are handled by the `aws-azure` (remote) server site
+    - All authorized HTTP requests are handled by the `aws-azure` (remote) server site.
 
     ![](./images/rhsi-books-api-v2_resilience_remoteaccess-2.png)

@@ -30,7 +30,7 @@ This repository contains instructions used to secure the _Library Books API_ wit
     1. Edit the 3scale Tenant CR ([`./threescale-tenant/tenant-rhsi-hackfest.yaml`](./threescale-tenant/tenant-rhsi-hackfest.yaml)) to replace the OpenShift domain placeholder with that of your cluster:
     
         ```script shell
-        sed 's/apps.*com/<Replace with your cluster domain URl>/g' ./threescale-tenant/tenant-rhsi-hackfest.yaml > temp.yml && mv temp.yml ./threescale-tenant/tenant-rhsi-hackfest.yaml
+        sed 's/apps.*com/<Replace with your OpenShift cluster application domain URI>/g' ./threescale-tenant/tenant-rhsi-hackfest.yaml > temp.yml && mv temp.yml ./threescale-tenant/tenant-rhsi-hackfest.yaml
         ```
 
         Example:
@@ -45,9 +45,14 @@ This repository contains instructions used to secure the _Library Books API_ wit
         ```
 
 The 3scale `rhsi-hackfest` Admin Portal is then available at `https://rhsi-hackfest-admin.apps.${OCP_DOMAIN}` where:
-    - `${OCP_DOMAIN}`: the application domain of your Red Hat OpenShift cluster.
+- `${OCP_DOMAIN}`: the application domain of your Red Hat OpenShift cluster.
+- Login credentials:
+    - login: `admin`
+    - password: `openshift`
 
 ![](./images/threescale-admin-portal.png)
+
+- Use login/password: admin/openshift
 
 ### II. Setup the 3scale-toolbox CLI
 
