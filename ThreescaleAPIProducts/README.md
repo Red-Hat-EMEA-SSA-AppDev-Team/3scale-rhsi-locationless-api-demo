@@ -155,7 +155,7 @@ The following environment variables are used in the scope of these instructions.
 
 4. Using the [Red Hat 3scale Toolbox CLI](https://access.redhat.com/documentation/en-us/red_hat_THREESCALE_api_management/2.13/html/operating_3scale/the-threescale-toolbox#doc-wrapper), create applications to test the configuration:
 
-    - A application with the default Developer account subscribing to the service `Premium v1` plan in order to test the `v1` configuration.
+    - Application with the default Developer account subscribing to the service `Premium v1` plan in order to test the `v1` configuration.
         ```script shell
         3scale application create \
         --description="Developer's Application to the Library Books API (V1 testing purposes)" \
@@ -164,7 +164,7 @@ The following environment variables are used in the scope of these instructions.
         ${THREESCALE_TOOLBOX_DESTINATION} john library-books-api premium-plan-v1 "Developer's App (v1)"
         ```
     
-    - A application with the default Developer account subscribing to the service `Premium v2` plan in order to test the `v2` configuration.
+    - Application with the default Developer account subscribing to the service `Premium v2` plan in order to test the `v2` configuration.
         ```script shell
         3scale application create \
         --description="Developer's Application to the Library Books API (V2 testing purposes)" \
